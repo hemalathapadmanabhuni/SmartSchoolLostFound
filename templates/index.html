@@ -1,0 +1,231 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart School Lost & Found</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f0f4f8;
+            color: #263238;
+        }
+
+        header {
+            background: #174ea6;
+            color: white;
+            text-align: center;
+            padding: 25px 15px;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+        }
+
+        header p {
+            margin: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 25px auto;
+            padding: 15px;
+        }
+
+        .card {
+            background: white;
+            padding: 22px;
+            margin-bottom: 22px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #00000012;
+        }
+
+        h2 {
+            color: #174ea6;
+            margin-top: 0;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 15px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 15px;
+            margin-top: 6px;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .full {
+            grid-column: 1 / -1;
+        }
+
+        button {
+            background: #174ea6;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        button:hover {
+            background: #103b80;
+        }
+
+        .item {
+            border: 1px solid #e0e6ed;
+            border-left: 5px solid #174ea6;
+            padding: 15px;
+            margin: 12px 0;
+            border-radius: 7px;
+            overflow-wrap: anywhere;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #e8f0fe;
+            color: #174ea6;
+            padding: 5px 9px;
+            border-radius: 15px;
+            font-size: 13px;
+        }
+
+        .empty {
+            color: #64748b;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #64748b;
+        }
+
+        @media (max-width: 600px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .full {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🎒 Smart School Lost & Found</h1>
+    <p>Lost something at school? Let's find it!</p>
+</header>
+
+<main class="container">
+
+    <section class="card">
+        <h2>📝 Report a Lost or Found Item</h2>
+
+        <form method="POST" action="/">
+            <div class="form-grid">
+
+                <div>
+                    <label for="item_type">Report Type</label>
+                    <select id="item_type" name="item_type" required>
+                        <option value="">Select type</option>
+                        <option value="Lost">Lost Item</option>
+                        <option value="Found">Found Item</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="name">Item Name</label>
+                    <input id="name" name="name"
+                           placeholder="e.g. Blue Water Bottle" required>
+                </div>
+
+                <div>
+                    <label for="category">Category</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select category</option>
+                        <option value="Bottle">Bottle</option>
+                        <option value="Books">Books</option>
+                        <option value="Stationery">Stationery</option>
+                        <option value="Bags">Bags</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label for="location">Location</label>
+                    <input id="location" name="location"
+                           placeholder="e.g. Classroom 8" required>
+                </div>
+
+                <div class="full">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description"
+                              rows="3"
+                              placeholder="Describe the item..."></textarea>
+                </div>
+
+                <div class="full">
+                    <button type="submit">Submit Report</button>
+                </div>
+
+            </div>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>🔎 Reported Items</h2>
+
+        {% if items %}
+            {% for item in items %}
+                <div class="item">
+                    <h3>{{ item['name'] }}</h3>
+
+                    <p>
+                        <span class="tag">{{ item['item_type'] }}</span>
+                        <span class="tag">{{ item['category'] }}</span>
+                        <span class="tag">{{ item['status'] }}</span>
+                    </p>
+
+                    <p><strong>Location:</strong> {{ item['location'] }}</p>
+
+                    <p>
+                        <strong>Description:</strong>
+                        {{ item['description'] or 'No description provided' }}
+                    </p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="empty">No reports yet. Be the first to submit a report!</p>
+        {% endif %}
+    </section>
+
+</main>
+
+<footer>
+    Smart School Lost & Found | School Hackathon Project
+</footer>
+
+</body>
+</html>

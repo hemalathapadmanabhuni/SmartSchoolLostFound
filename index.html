@@ -1,0 +1,155 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart School Lost & Found</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef4f8;
+            margin: 0;
+            color: #243047;
+        }
+
+        header {
+            background: #145a8d;
+            color: white;
+            text-align: center;
+            padding: 25px;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 25px auto;
+            padding: 15px;
+        }
+
+        section {
+            background: white;
+            padding: 22px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px #0001;
+        }
+
+        input, select, textarea, button {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccd5e0;
+            border-radius: 6px;
+        }
+
+        button {
+            background: #16835b;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .item {
+            border: 1px solid #dce4ec;
+            padding: 14px;
+            margin-top: 12px;
+            border-radius: 8px;
+        }
+
+        .lost {
+            color: #c0392b;
+            font-weight: bold;
+        }
+
+        .found {
+            color: #16835b;
+            font-weight: bold;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🎒 Smart School Lost & Found</h1>
+    <p>Lost something? Let's find it together!</p>
+</header>
+
+<main>
+    <section>
+        <h2>📝 Report an Item</h2>
+
+        <form method="POST">
+            <select name="item_type" required>
+                <option value="Lost">I Lost an Item</option>
+                <option value="Found">I Found an Item</option>
+            </select>
+
+            <input name="name" placeholder="Item name" required>
+
+            <select name="category" required>
+                <option value="Bottle">Water Bottle</option>
+                <option value="Books">Books / Notebooks</option>
+                <option value="ID Card">ID Card</option>
+                <option value="Lunch Box">Lunch Box</option>
+                <option value="Stationery">Stationery</option>
+                <option value="Other">Other</option>
+            </select>
+
+            <input name="location"
+                   placeholder="Where was it lost or found?" required>
+
+            <textarea name="description"
+                      placeholder="Colour and other details"></textarea>
+
+            <button type="submit">Submit Report</button>
+        </form>
+    </section>
+
+    <section>
+        <h2>🔍 Search Items</h2>
+
+        <form method="GET">
+            <input name="search" value="{{ search }}"
+                   placeholder="Search by item, category or location">
+            <button type="submit">Search</button>
+            <a href="/">Show All Items</a>
+        </form>
+
+        {% for item in items %}
+        <div class="item">
+            <p class="{{ 'lost' if item['item_type'] == 'Lost' else 'found' }}">
+                {{ item['item_type'] }} ITEM
+            </p>
+
+            <h3>{{ item['name'] }}</h3>
+            <p>Category: {{ item['category'] }}</p>
+            <p>Location: {{ item['location'] }}</p>
+            <p>Details: {{ item['description'] or 'No extra details' }}</p>
+            <p>Status: {{ item['status'] }}</p>
+
+            {% if item['status'] == 'Open' %}
+            <form method="POST"
+                  action="{{ url_for('returned', item_id=item['id']) }}">
+                <button type="submit">Mark as Returned</button>
+            </form>
+            {% endif %}
+        </div>
+        {% else %}
+        <p>No items found. Report or search for an item above.</p>
+        {% endfor %}
+    </section>
+</main>
+
+<footer>
+    Made by Class 8 Students 💚
+</footer>
+
+</body>
+</html>
